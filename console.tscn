@@ -1,0 +1,87 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://console.gd" type="Script" id=1]
+[ext_resource path="res://fonts/UbuntuMono-B.ttf" type="DynamicFontData" id=2]
+[ext_resource path="res://fonts/UbuntuMono-R.ttf" type="DynamicFontData" id=3]
+[ext_resource path="res://fonts/UbuntuMono-BI.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://fonts/UbuntuMono-RI.ttf" type="DynamicFontData" id=5]
+
+[sub_resource type="DynamicFont" id=1]
+font_data = ExtResource( 3 )
+
+[sub_resource type="DynamicFont" id=2]
+font_data = ExtResource( 4 )
+
+[sub_resource type="DynamicFont" id=3]
+font_data = ExtResource( 5 )
+
+[sub_resource type="DynamicFont" id=4]
+font_data = ExtResource( 2 )
+
+[sub_resource type="DynamicFont" id=5]
+size = 21
+font_data = ExtResource( 3 )
+
+[node name="Console" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = -10.0
+margin_bottom = -10.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="ColorRect" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color( 0, 0, 0, 0.0784314 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ScrollContainer" type="ScrollContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 10.0
+margin_top = 10.0
+margin_right = -10.0
+margin_bottom = -10.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="ScrollContainer"]
+margin_right = 984.0
+margin_bottom = 560.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="History" type="RichTextLabel" parent="ScrollContainer/VBoxContainer"]
+margin_right = 984.0
+margin_bottom = 18.0
+rect_clip_content = false
+size_flags_stretch_ratio = 0.0
+custom_fonts/mono_font = SubResource( 1 )
+custom_fonts/bold_italics_font = SubResource( 2 )
+custom_fonts/italics_font = SubResource( 3 )
+custom_fonts/bold_font = SubResource( 4 )
+custom_fonts/normal_font = SubResource( 5 )
+text = "Command history"
+fit_content_height = true
+
+[node name="CurrentCommand" type="RichTextLabel" parent="ScrollContainer/VBoxContainer"]
+margin_top = 22.0
+margin_right = 984.0
+margin_bottom = 40.0
+rect_clip_content = false
+size_flags_stretch_ratio = 0.0
+custom_fonts/mono_font = SubResource( 1 )
+custom_fonts/bold_italics_font = SubResource( 2 )
+custom_fonts/italics_font = SubResource( 3 )
+custom_fonts/bold_font = SubResource( 4 )
+custom_fonts/normal_font = SubResource( 5 )
+text = "> Command"
+fit_content_height = true
