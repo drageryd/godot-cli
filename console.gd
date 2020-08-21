@@ -3,19 +3,14 @@ extends Control
 onready var output_text = $ScrollContainer/VBoxContainer/History
 onready var command_text = $ScrollContainer/VBoxContainer/CurrentCommand
 
-var command_thread
-var command_history
+var command_thread = load("command_thread.gd").new()
+var command_history = load("command_history.gd").new()
 
 # Clear commands at start
 func _ready():
-	# Load the command classes
-	command_thread = load("command_thread.gd").new()
-	command_history = load("command_history.gd").new()
-	
 	# Clear console
 	output_text.clear()
 	command_text.clear()
-	update_console()
 
 # Input handler
 func _input(event):
@@ -59,8 +54,9 @@ func _input(event):
 		# Unknown command
 		else:
 			print("Got unicode %d" % event.unicode)
-		# Always update console
-		update_console()
+
+func _process(delta):
+	update_console()
 
 # Hide or show the console
 func toggle_console():
@@ -72,8 +68,8 @@ func toggle_console():
 
 # Get printable characters (only allow ascii)
 func get_printable(unicode):
-	# Printable ascii are within [32,126]
-	if 32 <= unicode and unicode <= 126:
+	# Printable ascii are within [32,126] + 10 (LF)
+	if (32 <= unicode and unicode <= 126) or unicode == 10:
 		# print("Printable character %s" % char(unicode))
 		return char(unicode)
 	else:
@@ -83,17 +79,26 @@ func get_printable(unicode):
 # Currently only updates the current command to be run
 # TODO: Print output as process runs
 func update_console():
-	# Update command text
-	command_text.text = command_history.get_command(true, true)
+	if command_thread.is_busy():
+		command_text.text = ""
+		for i in range(command_thread.stdout.length()):
+			var val = command_thread.stdout.read()
+			if val == -1:
+				output_text.text += "\n"
+			else:
+				output_text.text += get_printable(val)
+	else:
+		# Update command text
+		command_text.text = command_history.get_command(true, true)
 
 # Run command
 func run_command():
-	print("Run command: %s" % command_history.get_command(false, false))
-	# Run command here
-	if output_text.text.length() > 0:
-		output_text.text += "\n"
-	output_text.text += command_history.get_command(true, false)
-	command_thread.run(command_history.get_command(false, false))
-	# When done
-	if command_history.get_command(false, false) != "":
-		command_history.add_history(command_history.get_command(false, false))
+	var command = command_history.get_command(false, false)
+	print("Run command: %s" % command)
+	# Add indicator and command to console history
+	output_text.text += command_history.get_command(true, false) + "\n"
+	# Add command to command history
+	if command != "":
+		command_history.add_history(command)
+	# Run command
+	command_thread.run(command)
