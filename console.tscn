@@ -19,7 +19,6 @@ font_data = ExtResource( 5 )
 font_data = ExtResource( 2 )
 
 [sub_resource type="DynamicFont" id=5]
-size = 21
 font_data = ExtResource( 3 )
 
 [node name="Console" type="Control"]

@@ -74,7 +74,7 @@ func toggle_console():
 func get_printable(unicode):
 	# Printable ascii are within [32,126]
 	if 32 <= unicode and unicode <= 126:
-		print("Printable character %s" % char(unicode))
+		# print("Printable character %s" % char(unicode))
 		return char(unicode)
 	else:
 		return ""
