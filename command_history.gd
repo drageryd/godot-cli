@@ -25,12 +25,12 @@ func add_history(command):
 	marker_index = 0
 	command_index = 0
 
-func add_character(character):
+func add_characters(characters):
 	# Add character to current command
 	commands[command_index] = \
-		commands[command_index].insert(marker_index, character)
+		commands[command_index].insert(marker_index, characters)
 	# Move command marker
-	marker_index += 1
+	marker_index += characters.length()
 
 func backspace():
 	# Remove one character behind the marker
@@ -72,4 +72,7 @@ func marker_left():
 	marker_index = max(
 		marker_index - 1, 
 		0)
+
+func marker_position():
+	return marker_index
 

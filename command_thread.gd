@@ -8,6 +8,8 @@ var stdin = Stream.new()
 var stdout = Stream.new()
 var stderr = Stream.new()
 
+var pwd = "res://"
+
 # Run is called from the command line and holds the command to execute
 func run(command):
 	# Can the thread be joined
@@ -85,3 +87,28 @@ func _thread_main(command):
 
 func _exit_tree():
 	_thread.wait_to_finish()
+
+func match_commands(partial):
+	var matched = []
+	# Add all commands that begin with partial
+	for command in _commands.get_commands():
+		if command.begins_with(partial):
+			matched.append(command)
+	return matched
+
+func match_files(path, partial):
+	var matched = []
+	# Get all files and directories in Directory
+	var dir = Directory.new()
+	if dir.open(pwd + path) == OK:
+		dir.list_dir_begin()
+		var file_name = dir.get_next()
+		while file_name != "":
+			if dir.current_is_dir():
+				file_name += "/"
+			# Add all files and directories that begin with partial
+			if file_name.begins_with(partial):
+				matched.append(file_name)
+			file_name = dir.get_next()
+		dir.list_dir_end()
+	return matched

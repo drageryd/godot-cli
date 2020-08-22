@@ -14,6 +14,9 @@ func call_command(args, stdin, stdout, stderr):
 		print("CALLING")
 		_commands[args[0]].call_func(args, stdin, stdout, stderr)
 
+func get_commands():
+	return _commands.keys()
+
 func _test1(args, stdin, stdout, stderr):
 	print("Called test1", args)
 
