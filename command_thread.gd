@@ -3,6 +3,7 @@ var _thread_busy = false
 var _commands = load("commands.gd").new()
 
 const Stream = preload("stream.gd")
+const FileStream = preload("file_stream.gd")
 var stdin = Stream.new()
 var stdout = Stream.new()
 var stderr = Stream.new()
@@ -45,12 +46,38 @@ func _thread_main(command):
 			stdpipe = stdout
 
 		# Split command into an argument list
-		var args = command_list[i].split(" ", false)
+		var args : Array = command_list[i].split(" ", false)
 		print(args)
-		print(stdin._stream, stdpipe._stream, stdout._stream)
+
+		# Search for redirection in
+		var stream_in = stdin
+		var index = args.find("<")
+		if index != -1:
+			print("Found < at ", index)
+			# Remove > element
+			args.remove(index)
+			# Set file stream to next argument
+			stream_in = FileStream.new(args[index], "r")
+			# Remove file element
+			args.remove(index)
+
+		# Search for redirection out
+		var stream_out = stdpipe
+		index = args.find(">")
+		if index != -1:
+			print("Found > at ", index)
+			# Remove > element
+			args.remove(index)
+			# Set file stream to next argument
+			stream_out = FileStream.new(args[index], "w")
+			# Remove file element
+			args.remove(index)
+
+		print(args)
+		#print(stdin._stream, stdpipe._stream, stdout._stream)
 		# Call command
-		_commands.call_command(args, stdin, stdpipe, stderr)
-		print(stdin._stream, stdpipe._stream, stdout._stream)
+		_commands.call_command(args, stream_in, stream_out, stderr)
+		#print(stdin._stream, stdpipe._stream, stdout._stream)
 		OS.delay_msec(1000)
 	# Mark as ready when done
 	_thread_busy = false

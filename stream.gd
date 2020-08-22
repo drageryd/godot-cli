@@ -21,3 +21,8 @@ func read():
 
 func length():
 	return _stream.size()
+
+func close():
+	_mutex.lock()
+	_stream.append(-1)
+	_mutex.unlock()

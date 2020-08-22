@@ -25,7 +25,7 @@ func _echo_args(args, stdin, stdout, stderr):
 	for b in bytes:
 		stdout.write(b)
 		OS.delay_msec(1000)
-	stdout.write(-1)
+	stdout.close()
 
 func _forward_stdin(args, stdin, stdout, stderr):
 	while true:
